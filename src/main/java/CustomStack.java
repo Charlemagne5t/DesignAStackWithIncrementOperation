@@ -1,7 +1,11 @@
+import java.util.ArrayList;
+import java.util.List;
+
 class CustomStack {
     int[] stack;
     int count = 0;
     int top = -1;
+    List<Integer> inc = new ArrayList<>();
 
 
     public CustomStack(int maxSize) {
@@ -13,10 +17,11 @@ class CustomStack {
         if(count == stack.length) {
             return;
         }
-        count++;
 
+        count++;
         top++;
         stack[top] = x;
+        inc.add(0);
 
     }
 
@@ -25,16 +30,24 @@ class CustomStack {
             return -1;
         }
         int res = stack[top];
+        int add = inc.remove(inc.size() - 1);
+        if(!inc.isEmpty()) {
+            int newLast = inc.remove(inc.size() - 1) + add;
+            inc.add(newLast);
+        }
         stack[top] = 0;
         top--;
         count--;
 
-        return res;
+        return res + add;
     }
 
     public void increment(int k, int val) {
-        for(int i = 0; i < Math.min(k, top + 1); i++) {
-            stack[i] += val;
+        if(count == 0) {
+            return;
         }
+        int ind = Math.min(k - 1, inc.size() - 1);
+        int old = inc.get(ind);
+        inc.set(ind, old + val);
     }
 }
